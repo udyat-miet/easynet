@@ -1,7 +1,6 @@
 package miet.udyat.easynet.entity;
 
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,8 +28,7 @@ public class User implements UserDetails {
   @Column(nullable = false, length = 64)
   private String name;
 
-  @Column(nullable = false, length = 16)
-  @ColumnDefault("'user'")
+  @Column(nullable = false, length = 16, columnDefinition = "CHAR(10) DEFAULT 'user'")
   private String authority;
 
   @Column

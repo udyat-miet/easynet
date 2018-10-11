@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="base :: head"></head>
+<body>
+<div id="layout">
+  <a th:replace="base :: sidebar-toggle"></a>
+  <div th:replace="base :: sidebar"></div>
+  <div id="main">
+    <h2 th:replace="base :: content_title"></h2>
+    <form th:action="@{/upload_masters}" method="POST" enctype="multipart/form-data"
+          id="upload-masters-form" class="pure-form pure-form-stacked">
+      <fieldset>
+        <div th:if="${isShowingErrorBox}">
+          <span class="pure-form-message error">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+            <span th:text="${errorMessage}"></span>
+          </span>
+        </div>
+        <div th:if="${isShowingSuccessBox}">
+          <span class="pure-form-message">
+            <i class="fa fa-check-circle" aria-hidden="true"></i> Master record updated successfully!
+          </span>
+        </div>
+        <br/>
+        <label>Record type</label>
+        <label for="type_anniversary" class="pure-radio">
+          <input id="type_anniversary" type="radio" name="master_type" value="anniversary-master" checked> Anniversary
+        </label>
+        <label for="type_birthdays" class="pure-radio">
+          <input id="type_birthdays" type="radio" name="master_type" value="birthday-master"> Birthday
+        </label>
+        <label for="type_category" class="pure-radio">
+          <input id="type_category" type="radio" name="master_type" value="category-master"> Category
+        </label>
+        <label for="type_store" class="pure-radio">
+          <input id="type_store" type="radio" name="master_type" value="store-master"> Store
+        </label>
+        <br/>
+        <label for="csv_file">CSV File</label>
+        <input type="file" name="file" id="csv_file"/>
+        <br/>
+        <button type="submit" class="pure-button pure-button-primary">Upload</button>
+      </fieldset>
+    </form>
+  </div>
+</div>
+</body>
+</html>
