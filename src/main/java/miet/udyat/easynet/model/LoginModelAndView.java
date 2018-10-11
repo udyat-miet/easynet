@@ -7,4 +7,9 @@ public class LoginModelAndView extends BaseModelAndView {
     addObject("isShowingErrorBox", isShowingErrorBox);
     addObject("isShowingLogoutBox", isShowingLogoutBox);
   }
+
+  @Override
+  String getPageTitle() {
+    return "Login";
+  }
 }

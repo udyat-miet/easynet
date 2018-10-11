@@ -8,24 +8,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.HashMap;
 
-class BaseModelAndView extends ModelAndView {
-  private final static HashMap<String, String> TITLES = new HashMap<String, String>() {{
-    put("/about", "About");
-    put("/login", "Login");
-    put("/", "Dashboard");
-    put("/birthdays", "Today's Birthdays");
-    put("/anniversary", "Today's Anniversaries");
-    put("/polls", "Latest Polls");
-    put("/questions", "Latest Questions");
-    put("/views", "Views Galore");
-    put("/todo", "To be done");
-    put("/questions/review", "Review Questions");
-    put("/views/review", "Review views");
-    put("/upload_masters", "Upload master records");
-    put("/polls/setup", "Setup Poll");
-  }};
+abstract class BaseModelAndView extends ModelAndView {
 
   BaseModelAndView(String templatePath) {
     super(templatePath);
@@ -35,7 +19,7 @@ class BaseModelAndView extends ModelAndView {
     } catch (MalformedURLException e) {
       requestURL = "/";
     }
-    addObject("title", TITLES.get(requestURL));
+    addObject("title", getPageTitle());
     addObject("requestURL", requestURL);
     addObject("currentYear", Calendar.getInstance().get(Calendar.YEAR));
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -65,4 +49,6 @@ class BaseModelAndView extends ModelAndView {
       addObject("isUserAdmin", false);
     }
   }
+
+  abstract String getPageTitle();
 }

@@ -12,4 +12,9 @@ public class UploadMasterModelAndView extends BaseModelAndView {
   public UploadMasterModelAndView() {
     this(false, null);
   }
+
+  @Override
+  String getPageTitle() {
+    return "Upload master records";
+  }
 }
