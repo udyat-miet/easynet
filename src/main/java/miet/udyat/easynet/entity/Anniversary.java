@@ -2,11 +2,11 @@ package miet.udyat.easynet.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Data
 @Entity
@@ -14,13 +14,19 @@ import java.sql.Date;
 public class Anniversary {
 
   @Id
-  private Integer userId;
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "user_id")
+  private User user;
 
   @Id
   private Date date;
 
+  public long getAge() {
+    return ChronoUnit.YEARS.between(this.date.toLocalDate(), LocalDate.now());
+  }
+
   public static class PrimaryKey implements Serializable {
-    private Integer userId;
+    private User user;
     private Date date;
   }
 }

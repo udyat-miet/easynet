@@ -5,10 +5,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -34,8 +34,9 @@ public class User implements UserDetails {
   @Column
   private Date birthday;
 
-  @Column
-  private Integer storeId;
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "store_id")
+  private Store store;
 
   @Override
   public boolean isAccountNonExpired() {
@@ -70,6 +71,10 @@ public class User implements UserDetails {
   @Override
   public String getUsername() {
     return this.username;
+  }
+
+  public long getAge() {
+    return ChronoUnit.YEARS.between(this.birthday.toLocalDate(), LocalDate.now());
   }
 
   public void setPassword(String newPassword) {

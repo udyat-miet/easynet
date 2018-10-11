@@ -31,10 +31,13 @@ public class UploadMasterService {
   private UserRepository userRepository;
 
   public void saveAnniversaryMaster(CSVRecord record) {
-    Anniversary anniversary = new Anniversary();
-    anniversary.setUserId(Integer.valueOf(record.get(0)));
-    anniversary.setDate(Date.valueOf(record.get(2)));
-    anniversaryRepository.save(anniversary);
+    Optional<User> user = userRepository.findById(Integer.valueOf(record.get(0)));
+    if (user.isPresent()) {
+      Anniversary anniversary = new Anniversary();
+      anniversary.setUser(user.get());
+      anniversary.setDate(Date.valueOf(record.get(2)));
+      anniversaryRepository.save(anniversary);
+    }
   }
 
   public void saveBirthdayMaster(CSVRecord record) {
@@ -51,7 +54,9 @@ public class UploadMasterService {
     }
     user.setName(record.get(1));
     user.setBirthday(Date.valueOf(record.get(2)));
-    user.setStoreId(Integer.valueOf(record.get(3)));
+    Optional<Store> store = storeRepository.findById(Integer.valueOf(record.get(3)));
+    if (store.isPresent())
+      user.setStore(store.get());
     userRepository.save(user);
   }
 

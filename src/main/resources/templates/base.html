@@ -59,7 +59,7 @@
             <i class="fa fa-birthday-cake" aria-hidden="true"></i> Birthdays
           </a>
         </li>
-        <li th:class="'pure-menu-item' + (${requestURL} == '/anniversary' ? ' pure-menu-selected' : '')">
+        <li th:class="'pure-menu-item' + (${requestURL.startsWith('/anniversary')} ? ' pure-menu-selected' : '')">
           <a th:href="@{/anniversary}" class="pure-menu-link">
             <i class="fa fa-paper-plane" aria-hidden="true"></i> Anniversary
           </a>

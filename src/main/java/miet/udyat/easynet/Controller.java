@@ -1,6 +1,9 @@
 package miet.udyat.easynet;
 
+import miet.udyat.easynet.entity.repository.AnniversaryRepository;
 import miet.udyat.easynet.entity.repository.UserRepository;
+import miet.udyat.easynet.model.AnniversaryModelAndView;
+import miet.udyat.easynet.model.BirthdaysModelAndView;
 import miet.udyat.easynet.model.LoginModelAndView;
 import miet.udyat.easynet.model.UploadMasterModelAndView;
 import miet.udyat.easynet.service.UploadMasterService;
@@ -8,6 +11,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,9 +20,13 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.Principal;
+import java.sql.Date;
 
 @org.springframework.stereotype.Controller
 class Controller {
+
+  @Autowired
+  private AnniversaryRepository anniversaryRepository;
 
   @Autowired
   private UserRepository userRepository;
@@ -69,5 +77,25 @@ class Controller {
       System.err.println(e.getMessage());
       return new UploadMasterModelAndView(false, "Error parsing CSV records!");
     }
+  }
+
+  @GetMapping(path = "/birthdays")
+  ModelAndView birthdays() {
+    return new BirthdaysModelAndView(userRepository);
+  }
+
+  @GetMapping(path = "/birthdays/{date}")
+  ModelAndView birthdaysOn(@PathVariable(value = "date") Date date) {
+    return new BirthdaysModelAndView(userRepository, date);
+  }
+
+  @GetMapping(path = "/anniversary")
+  ModelAndView anniversary() {
+    return new AnniversaryModelAndView(anniversaryRepository);
+  }
+
+  @GetMapping(path = "/anniversary/{date}")
+  ModelAndView anniversaryOn(@PathVariable(value = "date") Date date) {
+    return new AnniversaryModelAndView(anniversaryRepository, date);
   }
 }

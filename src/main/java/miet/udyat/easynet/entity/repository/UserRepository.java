@@ -1,6 +1,7 @@
 package miet.udyat.easynet.entity.repository;
 
 import miet.udyat.easynet.entity.User;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +12,7 @@ import java.util.List;
 public interface UserRepository extends CrudRepository<User, Integer> {
 
   List<User> findByUsername(String username);
-  List<User> findByBirthday(Date date);
+
+  @Query("select u from User u where day(u.birthday) = day(?1) and month(u.birthday) = month(?1)")
+  List<User> getByBirthdate(Date date);
 }

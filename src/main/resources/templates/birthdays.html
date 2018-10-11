@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="base :: head"></head>
+<body>
+<div id="layout">
+  <a th:replace="base :: sidebar-toggle"></a>
+  <div th:replace="base :: sidebar"></div>
+  <div id="main">
+    <h2 th:replace="base :: content_title"></h2>
+    <div class="pure-g">
+      <div class="pure-u-1-3 text-right">
+        <a th:href="@{|/birthdays/${prev_day}|}" title="Previous day" class="prev">
+          <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div th:text="${currentDay}" class="pure-u-1-3 text-center"></div>
+      <div class="pure-u-1-3 text-left">
+        <a th:href="@{|/birthdays/${next_day}|}" title="Next day" class="next">
+          <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+    <br />
+    <h3 th:if="${birthday_users.isEmpty()}" id="no-data" class="text-center">No birthdays on this day! :(</h3>
+    <div th:if="not ${birthday_users.isEmpty()}" class="pure-g">
+      <div th:each="user : ${birthday_users}" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-5">
+        <div class="birthday-card">
+          Turning <span th:text="${user.age}"></span> years old<br/>
+          <b th:text="${user.name}"></b><br/>
+          @<span th:text="${user.username}"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
