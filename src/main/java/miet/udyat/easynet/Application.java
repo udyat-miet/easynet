@@ -61,7 +61,7 @@ public class Application {
     public UserDetailsService userDetailsService() {
       return (username) -> {
         try {
-          return userRepository.findByUsername(username).get(0);
+          return userRepository.findByUsername(username);
         } catch (Exception e) {
           throw new UsernameNotFoundException(e.getLocalizedMessage());
         }

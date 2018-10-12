@@ -10,7 +10,7 @@
     <form th:action="@{/upload_masters}" method="POST" enctype="multipart/form-data"
           id="upload-masters-form" class="pure-form pure-form-stacked">
       <fieldset>
-        <div th:if="${isShowingErrorBox}">
+        <div th:if="${errorMessage}">
           <span class="pure-form-message error">
             <i class="fa fa-times-circle" aria-hidden="true"></i>
             <span th:text="${errorMessage}"></span>

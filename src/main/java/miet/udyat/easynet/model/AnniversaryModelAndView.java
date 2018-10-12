@@ -13,8 +13,6 @@ public class AnniversaryModelAndView extends BaseModelAndView {
     addObject("currentDay", date.toString());
     addObject("next_day", nextDate.toString());
     addObject("prev_day", prevDate.toString());
-    if (getModel().get("title") == null)
-      addObject("title", "Anniversary");
     addObject("anniversaries", anniversaryRepository.getByDate(date));
   }
 
