@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface AnniversaryRepository extends CrudRepository<Anniversary, Anniversary.PrimaryKey> {
 
-  @Query("select a from Anniversary a where day(a.date) = day(?1) and month(a.date) = month(?1)")
-  List<Anniversary> getByDate(Date date);
+  @Query("select a from Anniversary a where day(a.id.date) = day(?1) and month(a.id.date) = month(?1)")
+  List<Anniversary> findByDate(Date date);
 }

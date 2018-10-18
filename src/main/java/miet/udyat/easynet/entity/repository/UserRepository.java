@@ -16,5 +16,5 @@ public interface UserRepository extends CrudRepository<User, Integer> {
   User findByUsername(String username);
 
   @Query("select u from User u where day(u.birthday) = day(?1) and month(u.birthday) = month(?1)")
-  List<User> getByBirthdate(Date date);
+  List<User> getByBirthDate(Date date);
 }

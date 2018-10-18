@@ -9,9 +9,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 
-abstract class BaseModelAndView extends ModelAndView {
+public class BaseModelAndView extends ModelAndView {
 
-  BaseModelAndView(String templatePath) {
+  public BaseModelAndView(String templatePath, String pageTitle) {
     super(templatePath);
     String requestURL;
     try {
@@ -19,12 +19,12 @@ abstract class BaseModelAndView extends ModelAndView {
     } catch (MalformedURLException e) {
       requestURL = "/";
     }
-    addObject("title", getPageTitle());
+    addObject("title", pageTitle);
     addObject("requestURL", requestURL);
     addObject("currentYear", Calendar.getInstance().get(Calendar.YEAR));
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     if (principal instanceof User) {
-      addObject("currentUser", ((User) principal).getUsername());
+      addObject("currentUser", principal);
       switch (((User) principal).getAuthority()) {
         case "user":
           addObject("isUserGuest", false);
@@ -49,6 +49,4 @@ abstract class BaseModelAndView extends ModelAndView {
       addObject("isUserAdmin", false);
     }
   }
-
-  abstract String getPageTitle();
 }

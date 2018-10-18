@@ -34,7 +34,7 @@ public class User implements UserDetails {
   @Column
   private Date birthday;
 
-  @ManyToOne(optional = false)
+  @ManyToOne
   @JoinColumn(name = "store_id")
   private Store store;
 

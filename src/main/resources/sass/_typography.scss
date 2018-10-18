@@ -1,0 +1,46 @@
+a {
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  -ms-transition: all 0.4s ease-out;
+  -o-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
+}
+
+.error,
+.success {
+  display: block;
+  max-width: 400px;
+  padding: 7px 10px;
+  margin: auto;
+  text-align: center;
+}
+
+.error {
+  color: #AA0012;
+}
+
+.success {
+  color: #12AA00;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.content-subhead {
+  border-bottom: 1px solid #777;
+  color: #888;
+  font-weight: 300;
+  margin: 0 auto 5vh;
+  max-width: 480px;
+  padding-bottom: 20px;
+  text-align: center;
+}

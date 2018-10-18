@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="base :: head"></head>
+<body>
+<div id="layout">
+  <a th:replace="base :: sidebar-toggle"></a>
+  <div th:replace="base :: sidebar"></div>
+  <div id="main">
+    <h2 th:replace="base :: content_title"></h2>
+    <form th:action="@{${requestURL}}" method="POST" id="ask-question-form" class="pure-form pure-form-stacked">
+      <fieldset>
+        <div th:if="${errorMessage} != null">
+          <span class="pure-form-message error">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+            <span th:text="${errorMessage}"></span>
+          </span>
+          <br />
+        </div>
+        <label for="title">Title</label>
+        <input th:value="${titleValue}" type="text" name="title" id="title" placeholder="What's on your mind?"/>
+        <br/>
+        <label for="description">Description</label>
+        <textarea th:text="${descriptionValue}" name="description"
+                  id="description" placeholder="Mind telling us a bit more?" rows="5"></textarea>
+        <br/>
+        <label for="categories">Categories</label>
+        <input th:value="${categoriesValue}" type="text" name="categories"
+               id="categories" placeholder="random, workspace, lifestyle"/>
+        <br/>
+        <button type="submit" class="pure-button pure-button-primary">Ask</button>
+      </fieldset>
+    </form>
+  </div>
+</div>
+</body>
+</html>

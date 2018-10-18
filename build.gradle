@@ -1,9 +1,13 @@
 buildscript {
   repositories {
     mavenCentral()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
   }
   dependencies {
     classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE'
+    classpath "gradle.plugin.org.kravemir.gradle.sass:GradleSassPlugin:1.2.2"
   }
 }
 
@@ -12,12 +16,23 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.kravemir.gradle.sass'
 
 mainClassName = 'miet.udyat.easynet.Application'
 
 bootJar {
   version = '0.1-dev'
   baseName = 'easynet'
+}
+
+sass {
+  main {
+    srcDir = file("$projectDir/src/main/resources/sass")
+    outDir = file("$buildDir/resources/main/static")
+    exclude = '_*'
+    minify = true
+    registerInSourceSets('main')
+  }
 }
 
 repositories {

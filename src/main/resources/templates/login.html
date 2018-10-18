@@ -10,12 +10,12 @@
     <h2 th:replace="base :: content_title"></h2>
     <form th:action="@{/login}" method="POST" id="login-form" class="pure-form pure-form-stacked">
       <fieldset>
-        <div th:if="${isShowingErrorBox}"><span class="pure-form-message error">
+        <span th:if="${isShowingErrorBox}" class="pure-form-message error">
           <i class="fa fa-times-circle" aria-hidden="true"></i> Invalid login credentials!
-        </span></div>
-        <div th:if="${isShowingLogoutBox}"><span class="pure-form-message">
+        </span>
+        <span th:if="${isShowingLogoutBox}" class="pure-form-message">
           <i class="fa fa-check-circle" aria-hidden="true"></i> You've been logged out!
-        </span></div>
+        </span>
         <br/>
         <label for="username">Username</label>
         <input id="username" type="text" name="username" placeholder="john_cool">
