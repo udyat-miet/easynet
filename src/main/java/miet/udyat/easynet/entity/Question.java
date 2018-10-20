@@ -22,7 +22,7 @@ public class Question {
   @Setter(AccessLevel.NONE)
   private Integer id;
 
-  @Column(nullable = false, length = 128, unique = true)
+  @Column(nullable = false, length = 128)
   private String title;
 
   @Column(nullable = false, length = 1024)
@@ -32,7 +32,7 @@ public class Question {
   @Setter(AccessLevel.NONE)
   private Timestamp createdTimestamp;
 
-  @Column
+  @Column(nullable = false)
   private boolean isApproved;
 
   @ManyToMany

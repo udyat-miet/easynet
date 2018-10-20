@@ -94,6 +94,11 @@
 
       <ul th:if="${requestURL.startsWith('/question')}" class="pure-menu-list menu-item-divided">
         <h4 class="pure-menu-subheading">Questions</h4>
+        <li th:class="'pure-menu-item' + (${requestURL} == '/question/ask' ? ' pure-menu-selected' : '')">
+          <a th:href="@{/question/ask}" class="pure-menu-link">
+            <i class="fa fa-plus-square" aria-hidden="true"></i> Ask
+          </a>
+        </li>
         <li th:class="'pure-menu-item' + (${requestURL} == '/question/review' ? ' pure-menu-selected' : '')">
           <a th:href="@{/question/review}" class="pure-menu-link">
             <i class="fa fa-flag" aria-hidden="true"></i> Review
@@ -105,7 +110,7 @@
         <h4 class="pure-menu-subheading">Polls</h4>
         <li th:class="'pure-menu-item' + (${requestURL} == '/poll/setup' ? ' pure-menu-selected' : '')">
           <a th:href="@{/poll/setup}" class="pure-menu-link">
-            <i class="fa fa-star-half-o" aria-hidden="true"></i> Setup
+            <i class="fa fa-plus-square" aria-hidden="true"></i> Setup
           </a>
         </li>
       </ul>

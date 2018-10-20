@@ -13,6 +13,7 @@
       </h3>
       <h3 th:text="${question.title}"></h3>
       <p th:text="${question.description}"></p>
+      <span th:text="${question.getCategoryString()}"></span>
       <div class="pure-g">
         <div th:if="${currentUser.id == question.owner.id}" class="pure-u-1-2 text-left">
           <a th:href="@{'/question/delete/' + ${question.id}}"

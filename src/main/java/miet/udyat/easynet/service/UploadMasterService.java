@@ -35,7 +35,7 @@ public class UploadMasterService {
   private UserRepository userRepository;
 
   public boolean saveMasterRecord(String masterType, MultipartFile csvFile) throws IOException {
-    if (!csvFile.getContentType().equalsIgnoreCase("text/csv")) {
+    if (!"text/csv".equalsIgnoreCase(csvFile.getContentType())) {
       throw new IOException("Was expecting text/csv; Got - " + csvFile.getContentType());
     }
     Iterable<CSVRecord> records = CSVFormat.RFC4180.parse(new InputStreamReader(csvFile.getInputStream()));
@@ -52,10 +52,24 @@ public class UploadMasterService {
       case "category-master":
         records.forEach(this::saveCategoryMaster);
         break;
+      case "user-master":
+        records.forEach(this::saveUserMaster);
+        break;
       default:
         return false;
     }
     return true;
+  }
+
+  private void saveUserMaster(CSVRecord record) {
+    User user = new User();
+    user.setId(Integer.valueOf(record.get(0)));
+    user.setUsername(record.get(1));
+    user.setPassword(record.get(2));
+    user.setName(record.get(3));
+    user.setAuthority("user");
+    storeRepository.findById(Integer.valueOf(record.get(4))).ifPresent(user::setStore);
+    userRepository.save(user);
   }
 
   private void saveAnniversaryMaster(CSVRecord record) {
@@ -70,21 +84,11 @@ public class UploadMasterService {
 
   private void saveBirthdayMaster(CSVRecord record) {
     Optional<User> optionalUser = userRepository.findById(Integer.valueOf(record.get(0)));
-    User user;
     if (optionalUser.isPresent()) {
-      user = optionalUser.get();
-    } else {
-      user = new User();
-      user.setId(Integer.valueOf(record.get(0)));
-      user.setUsername(record.get(0));
-      user.setPassword(record.get(1));
-      user.setAuthority("user");
+      User user = optionalUser.get();
+      user.setBirthday(Date.valueOf(record.get(2)));
+      userRepository.save(user);
     }
-    user.setName(record.get(1));
-    user.setBirthday(Date.valueOf(record.get(2)));
-    Optional<Store> store = storeRepository.findById(Integer.valueOf(record.get(3)));
-    store.ifPresent(user::setStore);
-    userRepository.save(user);
   }
 
   private void saveCategoryMaster(CSVRecord record) {
