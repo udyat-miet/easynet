@@ -1,6 +1,7 @@
 @import "scrollbar";
 @import "typography";
 @import "layout";
+@import "form";
 
 body {
   color: #777;
@@ -20,12 +21,6 @@ footer {
 #main {
   min-height: 100%;
   padding: 25px 10%;
-}
-
-#login-form,
-#upload-masters-form {
-  margin: 10vh auto;
-  max-width: 250px;
 }
 
 #no-data {
@@ -53,17 +48,6 @@ a.next,
 a.prev {
   color: #1f1f1f;
   text-decoration: none;
-}
-
-#ask-question-form {
-  margin: 10vh auto;
-  max-width: 550px;
-  width: 80%;
-
-  input[type="text"],
-  textarea {
-    width: 100%;
-  }
 }
 
 #question,
@@ -100,10 +84,6 @@ a.prev {
   margin-top: 0;
 }
 
-#answer-form > textarea {
-  width: 100%;
-}
-
 #questions {
 
   .question {
@@ -118,5 +98,32 @@ a.prev {
 
   .question:nth-child(even) {
     background: #eee;
+  }
+}
+
+#polls {
+  .poll {
+    background: #efefef;
+    border-radius: 3px;
+    padding: 15px;
+    margin: 10px;
+    box-shadow: 2px 2px #ddd;
+  }
+
+  h4,
+  form,
+  .poll-stats,
+  .poll-vote-form {
+    margin: 10px;
+  }
+
+  form,
+  .poll-stats,
+  .poll-vote-form {
+     font-size: 90%;
+  }
+
+  .poll-stats > span {
+    margin-left: 5px;
   }
 }

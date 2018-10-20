@@ -31,7 +31,7 @@ public class Application {
       // setup authentication for various url end-points
       httpSecurity
           .authorizeRequests()
-          .antMatchers("/setup_poll", "/upload_masters").hasAuthority("admin")
+          .antMatchers("/poll/setup", "/upload_masters").hasAuthority("admin")
           .antMatchers("/view/review", "/question/review").hasAnyAuthority("moderator", "admin")
           .antMatchers("/about").permitAll()
           .anyRequest().authenticated()
