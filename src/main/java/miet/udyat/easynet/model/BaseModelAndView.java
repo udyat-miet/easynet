@@ -1,7 +1,7 @@
 package miet.udyat.easynet.model;
 
+import miet.udyat.easynet.Application;
 import miet.udyat.easynet.entity.User;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -22,10 +22,10 @@ public class BaseModelAndView extends ModelAndView {
     addObject("title", pageTitle);
     addObject("requestURL", requestURL);
     addObject("currentYear", Calendar.getInstance().get(Calendar.YEAR));
-    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    if (principal instanceof User) {
-      addObject("currentUser", principal);
-      switch (((User) principal).getAuthority()) {
+    User currentUser = Application.getLoggedInUser();
+    if (currentUser != null) {
+      addObject("currentUser", currentUser);
+      switch (currentUser.getAuthority()) {
         case "user":
           addObject("isUserGuest", false);
           addObject("isUserModerator", false);

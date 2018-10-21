@@ -1,10 +1,11 @@
 package miet.udyat.easynet.service;
 
+import lombok.NonNull;
 import miet.udyat.easynet.entity.Category;
 import miet.udyat.easynet.entity.Question;
 import miet.udyat.easynet.entity.QuestionAnswer;
-import miet.udyat.easynet.entity.repository.QuestionAnswerRepository;
 import miet.udyat.easynet.entity.repository.CategoryRepository;
+import miet.udyat.easynet.entity.repository.QuestionAnswerRepository;
 import miet.udyat.easynet.entity.repository.QuestionRepository;
 import miet.udyat.easynet.entity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,42 +35,35 @@ public class QuestionService {
   @Autowired
   private UserRepository userRepository;
 
-  public void save(Question question) {
-    questionRepository.save(question);
-  }
-
-  public String save(Question question, String title, String description, String categories, String ownerUsername) {
-    if (title.isEmpty())
+  public String save(Question question) {
+    if (question.getTitle().trim().isEmpty())
       return "Title is a required field!";
-    if (title.length() < 16)
+    if (question.getTitle().length() < 16)
       return "Title should be atleast 20 characters long!";
-    if (description.isEmpty())
+    if (question.getDescription().trim().isEmpty())
       return "Description is a required field!";
-    if (description.length() < 32)
+    if (question.getDescription().length() < 32)
       return "Description should be atleast 32 characters long!";
 
-    List<String> categoryNames = Arrays.asList(categories.replace(" ", "").split(","));
-    List<Category> categoryList = categoryRepository.findByNameIn(categoryNames);
-
-    if (categoryList.isEmpty())
+    if (question.getCategoryList().isEmpty())
       return "Atleast 1 valid category is required!";
+    questionRepository.save(question);
+    return null;
+  }
 
-    question.setTitle(title);
-    question.setDescription(description);
-    question.setCategoryList(categoryList);
-    question.setOwner(userRepository.findByUsername(ownerUsername));
-    save(question);
+  public String save(QuestionAnswer questionAnswer) {
+
     return null;
   }
 
   @Nullable
   public Question getQuestionById(Integer id) {
-    return questionRepository.findById(id).get();
+    return questionRepository.findById(id).orElse(null);
   }
 
   @Nullable
   public QuestionAnswer getAnswerById(Integer id) {
-    return answerRepository.findById(id).get();
+    return answerRepository.findById(id).orElse(null);
   }
 
   public String addAnswer(Question dest, String answerContent, String ownerUsername) {
@@ -105,5 +99,11 @@ public class QuestionService {
         .setFirstResult(page * 10)
         .setMaxResults(10)
         .getResultList();
+  }
+
+  public List<Category> parseCategoryString(@NonNull String categories) {
+    return categoryRepository.findByNameIn(
+        Arrays.asList(categories.replace(", ", ",").split(","))
+    );
   }
 }

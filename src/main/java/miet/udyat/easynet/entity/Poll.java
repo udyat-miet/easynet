@@ -33,6 +33,8 @@ public class Poll {
   private List<PollVote> votes = new ArrayList<>();
 
   public boolean canUserVote(int userId) {
+    if (isVotingExpired())
+      return false;
       for (PollVote v : votes) {
         if (v.getUser().getId() == userId)
           return false;

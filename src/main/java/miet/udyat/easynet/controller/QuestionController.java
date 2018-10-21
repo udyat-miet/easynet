@@ -1,9 +1,9 @@
 package miet.udyat.easynet.controller;
 
+import miet.udyat.easynet.Application;
 import miet.udyat.easynet.entity.Question;
 import miet.udyat.easynet.entity.QuestionAnswer;
 import miet.udyat.easynet.entity.User;
-import miet.udyat.easynet.entity.repository.UserRepository;
 import miet.udyat.easynet.model.BaseModelAndView;
 import miet.udyat.easynet.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.security.Principal;
-
 @Controller
 @RequestMapping(path = "/question")
 public class QuestionController {
-
-  @Autowired
-  private UserRepository userRepository;
 
   @Autowired
   private QuestionService questionService;
@@ -29,12 +24,17 @@ public class QuestionController {
   }
 
   @PostMapping(path = "/ask")
-  ModelAndView ask(Principal principal,
-                   @RequestParam(name = "title") String title,
+  ModelAndView ask(@RequestParam(name = "title") String title,
                    @RequestParam(name = "description") String description,
                    @RequestParam(name = "categories") String categories) {
+    User currentUser = Application.getLoggedInUser();
     Question question = new Question();
-    String errorMessage = questionService.save(question, title, description, categories, principal.getName());
+    question.setTitle(title);
+    question.setDescription(description);
+    question.setCategoryList(questionService.parseCategoryString(categories));
+    question.setApproved("admin moderator".contains(currentUser.getAuthority()));
+    question.setOwner(currentUser);
+    String errorMessage = questionService.save(question);
     if (errorMessage != null) {
       BaseModelAndView modelAndView = new BaseModelAndView("question/ask", "Ask a question");
       modelAndView.addObject("errorMessage", errorMessage);
@@ -50,7 +50,7 @@ public class QuestionController {
   ModelAndView view(@PathVariable(name = "id") Integer id,
                     @RequestParam(name = "a", defaultValue = "0") String isAnswered) {
     Question question = questionService.getQuestionById(id);
-    BaseModelAndView modelAndView = new BaseModelAndView("question/view", "404");
+    BaseModelAndView modelAndView = new BaseModelAndView("question/view", "Not Found");
     if (question != null) {
       modelAndView.addObject("title", question.getTitle());
       modelAndView.addObject("question", question);
@@ -62,12 +62,16 @@ public class QuestionController {
   }
 
   @PostMapping(path = "/{id}")
-  ModelAndView acceptAnswer(Principal principal,
-                            @PathVariable(name = "id") Integer id,
+  ModelAndView acceptAnswer(@PathVariable(name = "id") Integer id,
                             @RequestParam(name = "answer") String answerContent) {
     Question question = questionService.getQuestionById(id);
-    if (question != null) {
-      String error = questionService.addAnswer(question, answerContent, principal.getName());
+    User currentUser = Application.getLoggedInUser();
+    if (question != null && currentUser != null) {
+      QuestionAnswer answer = new QuestionAnswer();
+      answer.setContent(answerContent);
+      answer.setOwner(currentUser);
+      answer.setQuestion(question);
+      String error = questionService.save(answer);
       if (error == null)
         return new ModelAndView("redirect:/question/" + id + "#answer-form?a=1");
       BaseModelAndView modelAndView = new BaseModelAndView("question/view", question.getTitle());
@@ -82,13 +86,11 @@ public class QuestionController {
   }
 
   @GetMapping(path = "/delete/{id}")
-  ModelAndView delete(Principal principal,
-                      @PathVariable(name = "id") Integer id) {
+  ModelAndView delete(@PathVariable(name = "id") Integer id) {
     Question question = questionService.getQuestionById(id);
-    User currentUser = userRepository.findByUsername(principal.getName());
-    if (question != null &&
-        (currentUser.getAuthority().equals("moderator")
-            || currentUser.getAuthority().equals("admin")
+    User currentUser = Application.getLoggedInUser();
+    if (question != null && currentUser != null &&
+        ("admin moderator".contains(currentUser.getAuthority())
             || currentUser.getId() == question.getOwner().getId())) {
       questionService.deleteQuestionById(id);
     }
@@ -96,13 +98,12 @@ public class QuestionController {
   }
 
   @GetMapping(path = "/answer/delete/{id}")
-  ModelAndView deleteAnswer(Principal principal,
-                            @PathVariable(name = "id") Integer id) {
+  ModelAndView deleteAnswer(@PathVariable(name = "id") Integer id) {
     QuestionAnswer answer = questionService.getAnswerById(id);
-    User currentUser = userRepository.findByUsername(principal.getName());
+    User currentUser = Application.getLoggedInUser();
     if (answer != null &&
-        (currentUser.getAuthority().equals("moderator")
-            || currentUser.getAuthority().equals("admin")
+        currentUser != null &&
+        ("admin moderator".contains(currentUser.getAuthority())
             || currentUser.getId() == answer.getOwner().getId())) {
       questionService.deleteAnswerById(id);
     }
@@ -119,10 +120,10 @@ public class QuestionController {
   }
 
   @GetMapping(path = "/approve/{id}")
-  ModelAndView approve(Principal principal, @PathVariable(name = "id") Integer id) {
+  ModelAndView approve(@PathVariable(name = "id") Integer id) {
     Question question = questionService.getQuestionById(id);
-    User currentUser = userRepository.findByUsername(principal.getName());
-    if("admin moderator".contains(currentUser.getAuthority()) && question != null) {
+    User currentUser = Application.getLoggedInUser();
+    if (currentUser != null && "admin moderator".contains(currentUser.getAuthority()) && question != null) {
       question.setApproved(true);
       questionService.save(question);
     }

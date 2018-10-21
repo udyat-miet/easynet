@@ -1,14 +1,14 @@
 package miet.udyat.easynet.controller;
 
+import miet.udyat.easynet.Application;
 import miet.udyat.easynet.entity.Poll;
+import miet.udyat.easynet.entity.PollVote;
 import miet.udyat.easynet.model.BaseModelAndView;
 import miet.udyat.easynet.service.PollService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.security.Principal;
 
 @Controller
 @RequestMapping(path = "/poll")
@@ -26,7 +26,9 @@ public class PollController {
   ModelAndView setup(@RequestParam(name = "candidate") String candidateQuestion,
                      @RequestParam(name = "options", defaultValue = "2") Integer votingOptions) {
     Poll poll = new Poll();
-    String error = pollService.save(poll, candidateQuestion, votingOptions);
+    poll.setQuestion(candidateQuestion);
+    poll.setOptions(votingOptions);
+    String error = pollService.save(poll);
     if (error != null) {
       BaseModelAndView modelAndView = new BaseModelAndView("poll/setup", "Setup poll");
       modelAndView.addObject("errorMessage", error);
@@ -46,11 +48,14 @@ public class PollController {
   }
 
   @PostMapping(path = "/vote/{id}")
-  ModelAndView vote(Principal principal,
-                    @PathVariable(name = "id") Integer pollId,
+  ModelAndView vote(@PathVariable(name = "id") Integer pollId,
                     @RequestParam(name = "page") Integer pageNumber,
                     @RequestParam(name = "weight") Integer weight) {
-    pollService.addVote(pollId, weight, principal.getName());
+    PollVote vote = new PollVote();
+    vote.setWeight(weight);
+    vote.setPoll(pollService.getById(pollId));
+    vote.setUser(Application.getLoggedInUser());
+    pollService.save(vote);
     return new ModelAndView("redirect:/poll/all?p=" + pageNumber);
   }
 }
