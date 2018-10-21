@@ -3,6 +3,7 @@ package miet.udyat.easynet.entity;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -25,10 +26,12 @@ public class Poll {
   @Setter(AccessLevel.NONE)
   private Timestamp createdTimestamp;
 
-  @Column
+  @Column(nullable =  false)
+  @ColumnDefault("2")
   private Integer options;
 
   @OneToMany
+  @JoinColumn(name = "poll_id")
   @Setter(AccessLevel.NONE)
   private List<PollVote> votes = new ArrayList<>();
 
@@ -62,6 +65,9 @@ public class Poll {
           break;
       }
     }
+    if (total == 0)
+      return new String[] {"0", "0%", "0%",  "0%"};
+
     return String.format("%d,%.2f%%,%.2f%%,%.2f%%",
         total,
         ((float) yes * 100 / total) ,

@@ -20,7 +20,10 @@ public class TodoController {
   @GetMapping(path = "/all")
   ModelAndView list(@RequestParam(name = "p", defaultValue = "0") Integer page,
                     @RequestParam(name = "e", defaultValue = "-2") Integer editTodoId,
-                    @RequestParam(name = "a", defaultValue = "0") Integer actionResponse) {
+                    @RequestParam(name = "a", defaultValue = "0") Integer actionResponse,
+                    @RequestParam(name="t", defaultValue = "") String newTaskValue,
+                    @RequestParam(name="p", defaultValue = "0") Integer newPriorityValue,
+                    @RequestParam(name="s", defaultValue = "0") Integer newStoreIdValue) {
     BaseModelAndView modelAndView = new BaseModelAndView("todo", "TODOs");
     modelAndView.addObject("todos", todoService.getLatest(page));
     modelAndView.addObject("editTodoId", editTodoId);
@@ -29,13 +32,19 @@ public class TodoController {
     if (editTodoId != -2) {
       modelAndView.addObject("stores", todoService.getAllStores());
     }
+
+    if (editTodoId == -1) {
+      modelAndView.addObject("newTaskValue", newTaskValue);
+      modelAndView.addObject("newPriorityValue", newPriorityValue);
+      modelAndView.addObject("newStoreIdValue", newStoreIdValue);
+    }
     return modelAndView;
   }
 
   @PostMapping(path = "/create")
   ModelAndView create(@RequestParam(name = "task") String task,
                       @RequestParam(name = "priority") Short priority,
-                      @RequestParam(name = "store_id") Integer storeId) {
+                      @RequestParam(name = "store_id", defaultValue = "-1") Integer storeId) {
     Todo todo = new Todo();
     todo.setTask(task);
     todo.setPriority(priority);
@@ -44,7 +53,7 @@ public class TodoController {
     todo.setCompleted(false);
     if (todoService.save(todo) == null)
       return new ModelAndView("redirect:/todo/all?a=1");
-    return new ModelAndView("redirect:/todo/all?a=3");
+    return new ModelAndView("redirect:/todo/all?a=3&e=-1&t=" + task + "&p=" + priority + "&s=" + storeId);
   }
 
   @PostMapping(path = "/edit/{id}")
@@ -60,7 +69,7 @@ public class TodoController {
       if (todoService.save(todo) == null)
         return new ModelAndView("redirect:/todo/all?a=1");
     }
-    return new ModelAndView("redirect:/todo/all?a=3");
+    return new ModelAndView("redirect:/todo/all?a=3&e=" + todoId + "&t=" + task + "&p=" + priority + "&s=" + storeId);
   }
 
   @GetMapping(path = "/delete/{id}")

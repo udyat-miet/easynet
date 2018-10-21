@@ -5,6 +5,7 @@ import miet.udyat.easynet.entity.Question;
 import miet.udyat.easynet.entity.QuestionAnswer;
 import miet.udyat.easynet.entity.User;
 import miet.udyat.easynet.model.BaseModelAndView;
+import miet.udyat.easynet.service.CategoryService;
 import miet.udyat.easynet.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,9 @@ public class QuestionController {
 
   @Autowired
   private QuestionService questionService;
+
+  @Autowired
+  private CategoryService categoryService;
 
   @GetMapping(path = "/ask")
   ModelAndView ask() {
@@ -31,7 +35,7 @@ public class QuestionController {
     Question question = new Question();
     question.setTitle(title);
     question.setDescription(description);
-    question.setCategoryList(questionService.parseCategoryString(categories));
+    question.setCategoryList(categoryService.parseCategoryString(categories));
     question.setApproved("admin moderator".contains(currentUser.getAuthority()));
     question.setOwner(currentUser);
     String errorMessage = questionService.save(question);
@@ -94,7 +98,7 @@ public class QuestionController {
             || currentUser.getId() == question.getOwner().getId())) {
       questionService.deleteQuestionById(id);
     }
-    return new ModelAndView("redirect:/questions");
+    return new ModelAndView("redirect:/question/all");
   }
 
   @GetMapping(path = "/answer/delete/{id}")

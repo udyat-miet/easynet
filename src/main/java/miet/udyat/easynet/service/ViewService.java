@@ -1,16 +1,12 @@
 package miet.udyat.easynet.service;
 
-import lombok.NonNull;
-import miet.udyat.easynet.entity.Category;
 import miet.udyat.easynet.entity.View;
-import miet.udyat.easynet.entity.repository.CategoryRepository;
 import miet.udyat.easynet.entity.repository.ViewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -18,9 +14,6 @@ public class ViewService {
 
   @PersistenceContext
   private EntityManager entityManager;
-
-  @Autowired
-  private CategoryRepository categoryRepository;
 
   @Autowired
   private ViewRepository viewRepository;
@@ -37,12 +30,6 @@ public class ViewService {
         .setFirstResult(page * 10)
         .setMaxResults(10)
         .getResultList();
-  }
-
-  public List<Category> parseCategoryString(@NonNull String categories) {
-    return categoryRepository.findByNameIn(
-        Arrays.asList(categories.replace(", ", ",").split(","))
-    );
   }
 
   public String save(View view) {

@@ -1,10 +1,7 @@
 package miet.udyat.easynet.service;
 
-import lombok.NonNull;
-import miet.udyat.easynet.entity.Category;
 import miet.udyat.easynet.entity.Question;
 import miet.udyat.easynet.entity.QuestionAnswer;
-import miet.udyat.easynet.entity.repository.CategoryRepository;
 import miet.udyat.easynet.entity.repository.QuestionAnswerRepository;
 import miet.udyat.easynet.entity.repository.QuestionRepository;
 import miet.udyat.easynet.entity.repository.UserRepository;
@@ -14,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -25,9 +21,6 @@ public class QuestionService {
 
   @Autowired
   private QuestionAnswerRepository answerRepository;
-
-  @Autowired
-  private CategoryRepository categoryRepository;
 
   @Autowired
   private QuestionRepository questionRepository;
@@ -51,8 +44,17 @@ public class QuestionService {
     return null;
   }
 
-  public String save(QuestionAnswer questionAnswer) {
-
+  // when you write code while sleeping :(
+  public String save(QuestionAnswer answer) {
+    if (answer.getContent().trim().isEmpty()) {
+      return "Answer field is empty!";
+    } if (answer.getContent().length() < 64) {
+      return "Vote must be at least 64 characters long!";
+    } if (answer.getQuestion() == null) {
+      return "Question not found!";
+    } if (answer.getOwner() == null)
+      return "User not found!";
+    answerRepository.save(answer);
     return null;
   }
 
@@ -66,19 +68,6 @@ public class QuestionService {
     return answerRepository.findById(id).orElse(null);
   }
 
-  public String addAnswer(Question dest, String answerContent, String ownerUsername) {
-    if (answerContent.isEmpty()) {
-      return "Vote is empty!";
-    } if (answerContent.length() < 64) {
-      return "Vote must be at least 64 characters long!";
-    }
-    QuestionAnswer answer = new QuestionAnswer();
-    answer.setContent(answerContent);
-    answer.setOwner(userRepository.findByUsername(ownerUsername));
-    answerRepository.save(answer);
-    return null;
-  }
-
   public void deleteQuestionById(Integer id) {
     questionRepository.deleteById(id);
   }
@@ -88,22 +77,16 @@ public class QuestionService {
   }
 
   public List<Question> getLatest(int page) {
-    return entityManager.createQuery("select q from Question q where q.isApproved = 1 order by q.createdTimestamp desc", Question.class)
+    return entityManager.createQuery("select q from Question q where q.isApproved != 0 order by q.createdTimestamp desc", Question.class)
         .setFirstResult(page * 10)
         .setMaxResults(10)
         .getResultList();
   }
 
   public List<Question> getUnapproved(int page) {
-    return entityManager.createQuery("select q from Question q where q.isApproved = 0 order by q.createdTimestamp", Question.class)
+    return entityManager.createQuery("select q from Question q where q.isApproved = 0 order by q.createdTimestamp desc", Question.class)
         .setFirstResult(page * 10)
         .setMaxResults(10)
         .getResultList();
-  }
-
-  public List<Category> parseCategoryString(@NonNull String categories) {
-    return categoryRepository.findByNameIn(
-        Arrays.asList(categories.replace(", ", ",").split(","))
-    );
   }
 }

@@ -4,6 +4,7 @@ import miet.udyat.easynet.Application;
 import miet.udyat.easynet.entity.User;
 import miet.udyat.easynet.entity.View;
 import miet.udyat.easynet.model.BaseModelAndView;
+import miet.udyat.easynet.service.CategoryService;
 import miet.udyat.easynet.service.ViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,9 @@ public class ViewController {
 
   @Autowired
   private ViewService viewService;
+
+  @Autowired
+  private CategoryService categoryService;
 
   @GetMapping(path = "/all")
   ModelAndView list(@RequestParam(name = "p", defaultValue = "0") Integer page) {
@@ -37,7 +41,7 @@ public class ViewController {
     if (currentUser != null) {
       View view = new View();
       view.setContent(content);
-      view.setCategoryList(viewService.parseCategoryString(categories));
+      view.setCategoryList(categoryService.parseCategoryString(categories));
       view.setOwner(Application.getLoggedInUser());
       view.setApproved("admin moderator".contains(currentUser.getAuthority()));
       String errorMessage = viewService.save(view);

@@ -15,9 +15,10 @@
       <p th:text="${question.description}"></p>
       <span th:text="${question.getCategoryString()}"></span>
       <div class="pure-g">
-        <div th:if="${currentUser.id == question.owner.id}" class="pure-u-1-2 text-left">
-          <a th:href="@{'/question/delete/' + ${question.id}}"
-             class="pure-button pure-button-primary" onclick="return confirm('Are you sure?')">
+        <div class="pure-u-1-2 text-left">
+          <a th:if="${currentUser.id == question.owner.id or isUserAdmin or isUserModerator}"
+             th:href="@{'/question/delete/' + ${question.id}}" class="pure-button pure-button-primary"
+             onclick="return confirm('Are you sure?')">
             <i class="fa fa-trash" aria-hidden="true"></i> Delete
           </a>
         </div>
@@ -28,13 +29,13 @@
         </div>
       </div>
     </div>
-    <div th:if="not ${question.answers.isEmpty()}" id="answers">
+    <div id="answers">
       <h4><span th:text="${question.answers.size()}"></span> answers</h4>
       <div th:each="answer : ${question.answers}" class="answer">
         <p th:text="${answer.content}"></p>
         <div class="pure-g">
-          <div th:if="${currentUser.id == answer.owner.id}" class="pure-u-1-2 text-left">
-            <a th:href="@{'/question/answer/delete/' + ${answer.id}}"
+          <div class="pure-u-1-2 text-left">
+            <a th:if="${currentUser.id == answer.owner.id}" th:href="@{'/question/answer/delete/' + ${answer.id}}"
                class="pure-button pure-button-primary" onclick="return confirm('Are you sure?')">
               <i class="fa fa-trash" aria-hidden="true"></i> Delete
             </a>
@@ -46,7 +47,8 @@
           </div>
         </div>
       </div>
-      <form th:action="@{${requestURL}}" method="POST" id="answer-form" class="pure-form pure-form-stacked">
+      <form th:if="${question.owner.id != currentUser.id}" th:action="@{${requestURL}}"
+            method="POST" id="answer-form" class="pure-form pure-form-stacked">
         <div th:if="${isAnswered}" class="pure-form-message success">
           <br/>
           <i class="fa fa-check-circle" aria-hidden="true"></i> Answer added successfully!

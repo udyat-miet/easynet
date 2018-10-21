@@ -3,6 +3,7 @@ package miet.udyat.easynet.entity;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.format.datetime.DateFormatter;
 
 import javax.persistence.*;
@@ -33,6 +34,7 @@ public class Question {
   private Timestamp createdTimestamp;
 
   @Column(nullable = false)
+  @ColumnDefault("0")
   private boolean isApproved;
 
   @ManyToMany

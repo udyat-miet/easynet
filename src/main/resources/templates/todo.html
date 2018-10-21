@@ -34,19 +34,20 @@
         <form th:action="@{/todo/create}" method="POST" class="pure-form">
           <td></td>
           <td>
-            <input type="text" name="task" placeholder="Task description">
+            <input th:value="${newTaskValue}" type="text" name="task" placeholder="Task description">
           </td>
           <td>
             <select name="priority">
-              <option value="0">Low</option>
-              <option value="1">Medium</option>
-              <option value="2">High</option>
+              <option th:attrappend="selected=${newPriorityValue == 0}?@{'selected'}" value="0">Low</option>
+              <option th:attrappend="selected=${newPriorityValue == 1}?@{'selected'}" value="1">Medium</option>
+              <option th:attrappend="selected=${newPriorityValue == 2}?@{'selected'}" value="2">High</option>
             </select>
           </td>
           <td>
             <select name="store_id">
               <option value="">Select store...</option>
-              <option th:each="store : ${stores}" th:value="${store.id}" th:text="${store.location}"></option>
+              <option th:each="store : ${stores}" th:attrappend="selected=${newStoreIdValue == store.id}?@{'selected'}"
+                      th:value="${store.id}" th:text="${store.location}"></option>
             </select>
           </td>
           <td class="todo-action">
@@ -65,7 +66,7 @@
           <td>
             <input th:value="${todo.task}" type="text" name="task" placeholder="Task description">
           </td>
-          <td th:switch="${todo.priority}"> text-right
+          <td th:switch="${todo.priority}">
             <select name="priority">
               <option th:attrappend="selected=${todo.priority == 0}?@{'selected'}" value="0">Low</option>
               <option th:attrappend="selected=${todo.priority == 1}?@{'selected'}" value="1">Medium</option>

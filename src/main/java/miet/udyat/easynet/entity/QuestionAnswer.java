@@ -20,7 +20,7 @@ public class QuestionAnswer {
   @Setter(AccessLevel.NONE)
   private Integer id;
 
-  @Column(length = 1024)
+  @Column(nullable = false, length = 1024)
   private String content;
 
   @ManyToOne(optional = false)

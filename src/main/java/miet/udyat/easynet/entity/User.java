@@ -35,7 +35,7 @@ public class User implements UserDetails {
   private Date birthday;
 
   @ManyToOne
-  @JoinColumn(name = "store_id")
+  @JoinColumn(nullable = false, name = "store_id")
   private Store store;
 
   @Override

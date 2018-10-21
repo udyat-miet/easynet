@@ -29,6 +29,8 @@ public class TodoService {
   }
 
   public Store getStoreById(Integer id) {
+    if (id == null)
+      return null;
     return storeRepository.findById(id).orElse(null);
   }
 

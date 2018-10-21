@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
 
-  List<Category> findByNameIn(List<String> names);
+  Category findByName(String name);
+
+  List<Category> findAllByNameIn(List<String> names);
 }
