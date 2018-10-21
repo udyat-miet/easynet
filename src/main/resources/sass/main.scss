@@ -127,3 +127,34 @@ a.prev {
     margin-left: 5px;
   }
 }
+
+table#todo-tasks {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  color: #444;
+
+  .priority-0 {
+    background: #fbffd8;
+  }
+
+  .priority-1 {
+    background: #ffecd8;
+  }
+
+  .priority-2 {
+    background: #ffd8d8;
+  }
+
+  .todo-action {
+
+    > a,
+    > button, > button:active, > button:hover {
+      background: none;
+      border: none;
+      color: #444;
+      margin-right: 10px;
+      text-decoration: none;
+    }
+  }
+}
