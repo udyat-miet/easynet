@@ -158,3 +158,24 @@ table#todo-tasks {
     }
   }
 }
+
+#views {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+
+  .view {
+    display: block;
+    margin: 15px auto;
+    padding: 15px;
+
+    div.pure-g {
+      font-size: 75%;
+      margin: 15px 0;
+    }
+  }
+
+  .view:nth-child(even) {
+    background: #eee;
+  }
+}

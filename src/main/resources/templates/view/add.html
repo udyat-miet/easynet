@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="base :: head"></head>
+<body>
+<div id="layout">
+  <a th:replace="base :: sidebar-toggle"></a>
+  <div th:replace="base :: sidebar"></div>
+
+  <div id="main">
+    <h2 th:replace="base :: content_title"></h2>
+    <form th:action="@{/view/add}" method="POST" id="view-add-form" class="pure-form pure-form-stacked">
+      <fieldset>
+        <span th:if="${errorMessage}" class="pure-form-message error">
+          <i class="fa fa-times-circle" aria-hidden="true"></i>
+          <span th:text="${errorMessage}"></span>
+        </span>
+        <br/>
+        <label for="content">Your views</label>
+        <textarea th:text="${contentValue}" id="content" name="content"
+                  placeholder="Write your views here" rows="5"></textarea>
+        <br/>
+        <input th:value="${categoriesValue}" type="text" name="categories"
+               id="categories" placeholder="random, workspace, lifestyle"/>
+        <br/>
+        <button type="submit" class="pure-button pure-button-primary">Share</button>
+      </fieldset>
+    </form>
+  </div>
+</div>
+</body>
+</html>

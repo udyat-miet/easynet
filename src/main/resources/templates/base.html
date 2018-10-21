@@ -99,14 +99,30 @@
             <i class="fa fa-plus-square" aria-hidden="true"></i> Ask
           </a>
         </li>
-        <li th:class="'pure-menu-item' + (${requestURL} == '/question/review' ? ' pure-menu-selected' : '')">
+        <li th:if="${isUserAdmin or isUserModerator}"
+            th:class="'pure-menu-item' + (${requestURL} == '/question/review' ? ' pure-menu-selected' : '')">
           <a th:href="@{/question/review}" class="pure-menu-link">
             <i class="fa fa-flag" aria-hidden="true"></i> Review
           </a>
         </li>
       </ul>
 
-      <ul th:if="${requestURL.startsWith('/poll')}" class="pure-menu-list menu-item-divided">
+      <ul th:if="${requestURL.startsWith('/view')}" class="pure-menu-list menu-item-divided">
+        <h4 class="pure-menu-subheading">Views</h4>
+        <li th:class="'pure-menu-item' + (${requestURL} == '/view/add' ? ' pure-menu-selected' : '')">
+          <a th:href="@{/view/add}" class="pure-menu-link">
+            <i class="fa fa-share-alt" aria-hidden="true"></i> Share
+          </a>
+        </li>
+        <li th:if="${isUserAdmin or isUserModerator}"
+            th:class="'pure-menu-item' + (${requestURL} == '/view/review' ? ' pure-menu-selected' : '')">
+          <a th:href="@{/view/review}" class="pure-menu-link">
+            <i class="fa fa-flag" aria-hidden="true"></i> Review
+          </a>
+        </li>
+      </ul>
+
+      <ul th:if="${requestURL.startsWith('/poll')} and ${isUserAdmin}" class="pure-menu-list menu-item-divided">
         <h4 class="pure-menu-subheading">Polls</h4>
         <li th:class="'pure-menu-item' + (${requestURL} == '/poll/setup' ? ' pure-menu-selected' : '')">
           <a th:href="@{/poll/setup}" class="pure-menu-link">
