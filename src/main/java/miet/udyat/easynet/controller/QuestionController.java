@@ -1,6 +1,7 @@
 package miet.udyat.easynet.controller;
 
 import miet.udyat.easynet.Application;
+import miet.udyat.easynet.entity.Category;
 import miet.udyat.easynet.entity.Question;
 import miet.udyat.easynet.entity.QuestionAnswer;
 import miet.udyat.easynet.entity.User;
@@ -138,6 +139,24 @@ public class QuestionController {
   ModelAndView list(@RequestParam(name = "p", defaultValue = "0") Integer page) {
     BaseModelAndView modelAndView = new BaseModelAndView("question/list", "Latest Questions");
     modelAndView.addObject("questions", questionService.getLatest(page));
+    modelAndView.addObject("pageNumber", page);
+    return modelAndView;
+  }
+
+  @GetMapping(path = "/category/all")
+  ModelAndView listCategories(@RequestParam(name = "p", defaultValue = "0") Integer page) {
+    BaseModelAndView modelAndView = new BaseModelAndView("category-list", "Question categories");
+    modelAndView.addObject("categories", categoryService.getAll(page));
+    modelAndView.addObject("pageNumber", page);
+    return modelAndView;
+  }
+
+  @GetMapping(path = "/category/{id}")
+  ModelAndView listByCategory(@PathVariable(name = "id") Integer id,
+                              @RequestParam(name = "p", defaultValue = "0") Integer page) {
+    Category category = categoryService.getById(id);
+    BaseModelAndView modelAndView = new BaseModelAndView("question/list", "Latest Questions in " + category.getName());
+    modelAndView.addObject("questions", questionService.getByCategory(category, page));
     modelAndView.addObject("pageNumber", page);
     return modelAndView;
   }

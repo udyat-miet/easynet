@@ -1,5 +1,6 @@
 package miet.udyat.easynet.service;
 
+import miet.udyat.easynet.entity.Category;
 import miet.udyat.easynet.entity.Question;
 import miet.udyat.easynet.entity.QuestionAnswer;
 import miet.udyat.easynet.entity.repository.QuestionAnswerRepository;
@@ -76,15 +77,24 @@ public class QuestionService {
     answerRepository.deleteById(id);
   }
 
-  public List<Question> getLatest(int page) {
+  public List<Question> getLatest(Integer page) {
     return entityManager.createQuery("select q from Question q where q.isApproved != 0 order by q.createdTimestamp desc", Question.class)
         .setFirstResult(page * 10)
         .setMaxResults(10)
         .getResultList();
   }
 
-  public List<Question> getUnapproved(int page) {
+  public List<Question> getUnapproved(Integer page) {
     return entityManager.createQuery("select q from Question q where q.isApproved = 0 order by q.createdTimestamp desc", Question.class)
+        .setFirstResult(page * 10)
+        .setMaxResults(10)
+        .getResultList();
+  }
+
+  public List<Question> getByCategory(Category category, Integer page) {
+    return entityManager.createQuery("select q from Question q where q.isApproved != 0 " +
+        "and :category member of q.categoryList order by q.createdTimestamp desc", Question.class)
+        .setParameter("category", category)
         .setFirstResult(page * 10)
         .setMaxResults(10)
         .getResultList();

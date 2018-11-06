@@ -3,7 +3,7 @@ package miet.udyat.easynet.controller;
 import miet.udyat.easynet.entity.repository.AnniversaryRepository;
 import miet.udyat.easynet.entity.repository.UserRepository;
 import miet.udyat.easynet.model.BaseModelAndView;
-import miet.udyat.easynet.service.UploadMasterService;
+import miet.udyat.easynet.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +29,30 @@ public class RootController {
   @Autowired
   private UploadMasterService uploadMasterService;
 
+  @Autowired
+  private PollService pollService;
+
+  @Autowired
+  private QuestionService questionService;
+
+  @Autowired
+  private ViewService viewService;
+
+  @Autowired
+  private TodoService todoService;
+
+  @GetMapping(path = "/")
+  ModelAndView dashboard() {
+    BaseModelAndView modelAndView = new BaseModelAndView("dashboard", "Dashboard");
+    Date today = new Date(System.currentTimeMillis());
+    modelAndView.addObject("birthdays", userRepository.getByBirthDate(today));
+    modelAndView.addObject("anniversaries", anniversaryRepository.findByDate(today));
+    modelAndView.addObject("polls", pollService.getLatestOpen(0));
+    modelAndView.addObject("questions", questionService.getLatest(0));
+    modelAndView.addObject("views", viewService.getLatest(0));
+    modelAndView.addObject("todos", todoService.getLatest(0));
+    return modelAndView;
+  }
 
   @GetMapping(path = "/login")
   ModelAndView login(Principal principal,

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.xml.crypto.Data;
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -55,6 +57,17 @@ public class PollService {
 
   public List<Poll> getLatest(int page) {
     return entityManager.createQuery("select p from Poll p order by p.createdTimestamp desc", Poll.class)
+        .setFirstResult(page * 10)
+        .setMaxResults(10)
+        .getResultList();
+  }
+
+  public List<Poll> getLatestOpen(int page) {
+    Date after = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+    return entityManager.createQuery(
+        "select p from Poll p where p.createdTimestamp > :after order by p.createdTimestamp desc", Poll.class
+    )
+        .setParameter("after", after)
         .setFirstResult(page * 10)
         .setMaxResults(10)
         .getResultList();

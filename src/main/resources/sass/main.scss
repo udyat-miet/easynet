@@ -178,3 +178,34 @@ table#todo-tasks {
     background: #eee;
   }
 }
+
+#categories {
+  a {
+    color: #333;
+  }
+}
+
+#dashboard {
+
+  .pure-u-1 {
+
+    > .content_wrapper {
+      border-radius: 4px;
+      background: #eee;
+      padding: 10px;
+      margin: 10px;
+
+      > h3 {
+        text-align: center;
+      }
+
+      a {
+        color: #333;
+      }
+    }
+  }
+
+  h3 {
+    text-align: center;
+  }
+}

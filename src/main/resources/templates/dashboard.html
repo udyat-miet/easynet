@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="base :: head"></head>
+<body>
+<div id="layout">
+  <a th:replace="base :: sidebar-toggle"></a>
+  <div th:replace="base :: sidebar"></div>
+
+  <div id="main">
+    <h2 th:replace="base :: content_title"></h2>
+    <div id="dashboard" class="pure-g">
+      <div class="pure-u-1 pure-u-md-1-2">
+        <div class="content_wrapper">
+          <h3>Birthdays today</h3>
+          <ul th:if="not ${birthdays.isEmpty()}">
+            <li th:each="birthday : ${birthdays}">
+              @<span th:text="${birthday.username}"></span>
+            </li>
+          </ul>
+          <span th:if="${birthdays.isEmpty()}" class="error">
+            <i class="fa fa-times-circle" aria-hidden="true"></i> No birthdays today!
+          </span>
+        </div>
+      </div>
+      <div class="pure-u-1 pure-u-md-1-2">
+        <div class="content_wrapper">
+          <h3>Anniversaries today</h3>
+          <ul th:if="not ${anniversaries.isEmpty()}">
+            <li th:each="anniversary : ${anniversaries}">
+              @<span th:text="${anniversary.user.username}"></span>
+            </li>
+          </ul>
+          <span th:if="${anniversaries.isEmpty()}" class="error">
+            <i class="fa fa-times-circle" aria-hidden="true"></i> No anniversaries today!
+          </span>
+        </div>
+      </div>
+      <div class="pure-u-1 pure-u-md-1-2">
+        <div class="content_wrapper">
+          <h3>Latest Polls</h3>
+          <ul th:if="not ${polls.isEmpty()}">
+            <li th:each="poll : ${polls}">
+              <a th:href="@{/poll/all}" th:text="${poll.question}"></a>
+            </li>
+          </ul>
+          <span th:if="${polls.isEmpty()}" class="error">
+            <i class="fa fa-times-circle" aria-hidden="true"></i> No open polls!
+          </span>
+        </div>
+      </div>
+      <div class="pure-u-1 pure-u-md-1-2">
+        <div class="content_wrapper">
+          <h3>Latest questions</h3>
+          <ul th:if="not ${questions.isEmpty()}">
+            <li th:each="question : ${questions}">
+              <a th:href="@{'/question/' + ${question.id}}" th:text="${question.title}"></a>
+            </li>
+          </ul>
+          <span th:if="${questions.isEmpty()}" class="error">
+            <i class="fa fa-times-circle" aria-hidden="true"></i> No new questions!
+          </span>
+        </div>
+      </div>
+      <div class="pure-u-1 pure-u-md-1-2">
+        <div class="content_wrapper">
+          <h3>Latest views</h3>
+          <ul th:if="not ${views.isEmpty()}">
+            <li th:each="view : ${views}">
+              <q th:text="${view.content}"></q>
+              - <span th:text="${view.owner.username}"></span>
+              , <span th:text="${view.getCreatedTime()}"></span>
+            </li>
+          </ul>
+          <span th:if="${views.isEmpty()}" class="error">
+            <i class="fa fa-times-circle" aria-hidden="true"></i> No new views!
+          </span>
+        </div>
+      </div>
+      <div class="pure-u-1 pure-u-md-1-2">
+        <div class="content_wrapper">
+          <h3>Todo</h3>
+          <ul th:if="not ${todos.isEmpty()}">
+            <li th:each="todo : ${todos}">
+              <span th:text="${todo.task}"></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
